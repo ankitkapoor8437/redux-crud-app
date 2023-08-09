@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+
+// Create User
 export const createUser = createAsyncThunk("createUser", async (data, { rejectWithValue }) => {
     try {
         const response = await fetch("https://64d3244967b2662bf3dbb8a0.mockapi.io/users", {
@@ -17,6 +19,27 @@ export const createUser = createAsyncThunk("createUser", async (data, { rejectWi
     }
 });
 
+
+// Update User
+export const updateUser = createAsyncThunk("updateuser", async (data, { rejectWithValue }) => {
+    console.log("Updated Date", data)
+    try {
+        const response = await fetch(`https://64d3244967b2662bf3dbb8a0.mockapi.io/users/${data.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
+// Read User
 export const readUser = createAsyncThunk("readUser", async (_, { rejectWithValue }) => {
     try {
         const response = await fetch("https://64d3244967b2662bf3dbb8a0.mockapi.io/users");
@@ -27,6 +50,8 @@ export const readUser = createAsyncThunk("readUser", async (_, { rejectWithValue
     }
 });
 
+
+// Delete User
 export const deleteUser = createAsyncThunk("deleteUser", async (id, { rejectWithValue }) => {
     try {
         const response = await fetch(`https://64d3244967b2662bf3dbb8a0.mockapi.io/users/${id}`, {
@@ -50,6 +75,7 @@ const userDetail = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            // Create user
             .addCase(createUser.pending, (state) => {
                 state.loading = true;
             })
@@ -61,6 +87,7 @@ const userDetail = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+            // Read User
             .addCase(readUser.pending, (state) => {
                 state.loading = true;
             })
@@ -72,6 +99,7 @@ const userDetail = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+            // Delete User
             .addCase(deleteUser.pending, (state) => {
                 state.loading = true;
             })
@@ -83,6 +111,18 @@ const userDetail = createSlice({
                 }
             })
             .addCase(deleteUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            // Update User
+            .addCase(updateUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.users = state.users.map((element) => element.id === action.payload.id ? action.payload : element)
+            })
+            .addCase(updateUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });
