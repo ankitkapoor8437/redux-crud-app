@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Create Action
 export const createUser = createAsyncThunk("createUser", async (data, { rejectWithValue }) => {
-    const response = await fetch("https://64d1f2bcf8d60b17436124b0.mockapi.io/crud", {
+    const response = await fetch("https://64d311c367b2662bf3dba21c.mockapi.io/crud", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -16,6 +16,19 @@ export const createUser = createAsyncThunk("createUser", async (data, { rejectWi
         return rejectWithValue(error);
     }
 })
+
+// Read Action
+export const readUser = createAsyncThunk("readUser", async ({ rejectWithValue }) => {
+    const response = await fetch("https://64d311c367b2662bf3dba21c.mockapi.io/crud");
+    try {
+        const result = await response.json();
+        console.log(result)
+        return result;
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+})
+
 
 export const userDetail = createSlice({
     name: "User Detail",
@@ -32,11 +45,23 @@ export const userDetail = createSlice({
             state.loading = false;
             state.users.push(action.payload);
         },
+        [createUser.rejected]: (state, action) => {
+            state.loading = false;
+            state.users = action.payload;
+        },
+        [readUser.pending]: (state) => {
+            state.loading = true;
+        },
+        [readUser.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.users = action.payload;
+        },
 
         [createUser.rejected]: (state, action) => {
             state.loading = false;
             state.users = action.payload;
         },
+
     }
 })
 
