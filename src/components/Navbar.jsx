@@ -18,7 +18,7 @@ const Navbar = () => {
               <Link to="/" className="nav-link active" aria-current="page">Create Post</Link>
             </li>
             <li className="nav-item">
-              <Link to="/read" className="nav-link" >All Post  ({allUsers.length})</Link>
+              <Link to="/read" className="nav-link" >All Post </Link>
             </li>
           </ul>
           <form className="d-flex" role="search">

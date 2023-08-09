@@ -1,68 +1,92 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// Create Action
 export const createUser = createAsyncThunk("createUser", async (data, { rejectWithValue }) => {
-    const response = await fetch("https://64d311c367b2662bf3dba21c.mockapi.io/crud", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data)
-    });
     try {
+        const response = await fetch("https://64d3244967b2662bf3dbb8a0.mockapi.io/users", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data)
+        });
+
         const result = await response.json();
         return result;
     } catch (error) {
-        return rejectWithValue(error);
+        return rejectWithValue(error.message);
     }
-})
+});
 
-// Read Action
-export const readUser = createAsyncThunk("readUser", async ({ rejectWithValue }) => {
-    const response = await fetch("https://64d311c367b2662bf3dba21c.mockapi.io/crud");
+export const readUser = createAsyncThunk("readUser", async (_, { rejectWithValue }) => {
     try {
+        const response = await fetch("https://64d3244967b2662bf3dbb8a0.mockapi.io/users");
         const result = await response.json();
-        console.log(result)
         return result;
     } catch (error) {
-        return rejectWithValue(error);
+        return rejectWithValue(error.message);
     }
-})
+});
 
+export const deleteUser = createAsyncThunk("deleteUser", async (id, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`https://64d3244967b2662bf3dbb8a0.mockapi.io/users/${id}`, {
+            method: "DELETE"
+        });
 
-export const userDetail = createSlice({
-    name: "User Detail",
+        const result = await response.json();
+        return { id, result };
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
+const userDetail = createSlice({
+    name: "UserDetail",
     initialState: {
         users: [],
         loading: false,
         error: null,
     },
-    extraReducers: {
-        [createUser.pending]: (state) => {
-            state.loading = true;
-        },
-        [createUser.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.users.push(action.payload);
-        },
-        [createUser.rejected]: (state, action) => {
-            state.loading = false;
-            state.users = action.payload;
-        },
-        [readUser.pending]: (state) => {
-            state.loading = true;
-        },
-        [readUser.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.users = action.payload;
-        },
-
-        [createUser.rejected]: (state, action) => {
-            state.loading = false;
-            state.users = action.payload;
-        },
-
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(createUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(createUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.users.push(action.payload);
+            })
+            .addCase(createUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            .addCase(readUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(readUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.users = action.payload;
+            })
+            .addCase(readUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            .addCase(deleteUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(deleteUser.fulfilled, (state, action) => {
+                state.loading = false;
+                const { id } = action.payload;
+                if (id) {
+                    state.users = state.users.filter((data) => data.id !== id);
+                }
+            })
+            .addCase(deleteUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            });
     }
-})
+});
 
 export default userDetail.reducer;

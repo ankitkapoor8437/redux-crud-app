@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { readUser } from '../features/userDetailSlice';
-
+import { deleteUser, readUser } from '../features/userDetailSlice';
+import CustomModal from './CustomModal';
+import mockData from '../components/mockData'
+import { Link } from 'react-router-dom';
 
 
 const Read = () => {
+    const [id, setId] = useState();
+    const [show, setShow] = useState(false);
     const dispatch = useDispatch();
     const { users, loading } = useSelector((state) => state.app);
 
@@ -15,23 +19,28 @@ const Read = () => {
     if (loading) {
         return <h2>Loading</h2>
     }
+
+
     return (
         <div>
+            {
+                show && <CustomModal id={id} show={show} setShow={setShow} />
+            }
             <h2>All Data</h2>
             <div>
                 {
-                 users &&  users.map((data) => (
-                        <div className="card w-50 mx-auto my-2" >
+                    users && users.map((data) => (
+                        <div className="card w-50 mx-auto my-2" key={data.id} >
                             <div className="card-body">
                                 <h5 className="card-title">{data.name}</h5>
                                 <h6 className="card-subtitle mb-2 text-body-secondary">{data.email}</h6>
-                                <p className="card-text">{data.age}</p>
-                                <a href="#" className="card-link">Edit</a>
-                                <a href="#" className="card-link">Delete</a>
+                                <p className="card-text">{data.gender}</p>
+                                {/* <Link onClick={() => dispatch(editUser(data.id))} className="card-link">Edit</Link> */}
+                                <button href="#" className="card-link" onClick={() => [setId(data.id), setShow(true)]}>View</button>
+                                <Link onClick={() => dispatch(deleteUser(data.id))} className="card-link">Delete</Link>
                             </div>
                         </div>
                     ))}
-
             </div>
         </div>
     )
