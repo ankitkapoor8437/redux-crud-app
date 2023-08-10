@@ -2,7 +2,6 @@ import React from 'react';
 // Importing useSelector from react-redux is commented out because it's not being used in this code snippet.
 // If you plan to use it in your actual code, make sure to import it properly.
 // import { useSelector } from 'react-redux';
-import mockData from './mockData';
 import { useSelector } from 'react-redux';
 
 const CustomModal = ({ id, show, setShow }) => {

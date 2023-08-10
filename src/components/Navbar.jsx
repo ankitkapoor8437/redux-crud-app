@@ -11,7 +11,7 @@ const Navbar = () => {
 
   useEffect(() => {
     dispatch(searchUsers(searchData));
-  }, [ searchData]);
+  }, [dispatch, searchData]);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">

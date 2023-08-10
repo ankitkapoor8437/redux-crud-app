@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { createUser, updateUser } from '../features/userDetailSlice';
+import {  updateUser } from '../features/userDetailSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 
 
@@ -12,7 +12,7 @@ const Update = () => {
     const { id } = useParams();
     const [fetchedData, setFetchedData] = useState();
 
-    const { users, loading } = useSelector((state) => state.app); // Assuming you have a state named 'app' in your redux store.
+    const { users } = useSelector((state) => state.app); // Assuming you have a state named 'app' in your redux store.
     useEffect(() => {
         if (id && users.length > 0) { // Make sure users data is available before filtering
             const singleUser = users.find((element) => element.id === id); // Using 'find' instead of 'filter' since you're looking for a single user
@@ -21,7 +21,7 @@ const Update = () => {
                 setFetchedData(singleUser); // Wrap the single user in an array
             }
         }
-    }, []); // Added 'id' and 'users' to the dependency array to re-run the effect when they change
+    }, ); // Added 'id' and 'users' to the dependency array to re-run the effect when they change
 
     // console.log("Fetched User", fetchedData);
 

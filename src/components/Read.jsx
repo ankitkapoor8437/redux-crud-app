@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteUser, readUser } from '../features/userDetailSlice';
 import CustomModal from './CustomModal';
-import mockData from '../components/mockData'
 import { Link } from 'react-router-dom';
 
 
