@@ -21,7 +21,7 @@ const Update = () => {
                 setFetchedData(singleUser); // Wrap the single user in an array
             }
         }
-    }, ); // Added 'id' and 'users' to the dependency array to re-run the effect when they change
+    }, [id, users]); // Added 'id' and 'users' to the dependency array to re-run the effect when they change
 
     // console.log("Fetched User", fetchedData);
 
