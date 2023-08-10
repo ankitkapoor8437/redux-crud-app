@@ -1,9 +1,17 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { searchUsers } from '../features/userDetailSlice';
 
 const Navbar = () => {
-  const allUsers = useSelector((state)=> state.app.users);
+  const allUsers = useSelector(state => state.app.users);
+
+  const [searchData, setSearchData] = useState("");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(searchUsers(searchData));
+  }, [ searchData]);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -18,12 +26,12 @@ const Navbar = () => {
               <Link to="/" className="nav-link active" aria-current="page">Create Post</Link>
             </li>
             <li className="nav-item">
-              <Link to="/read" className="nav-link" >All Post </Link>
+              <Link to="/read" className="nav-link" >All Post {allUsers.length} </Link>
             </li>
           </ul>
           <form className="d-flex" role="search">
-            <input className="form-control me-2  " type="search" placeholder="Search" aria-label="Search" />
-            <button className="btn btn-outline-success" type="submit">Search</button>
+            <input className="form-control me-2" value={searchData} onChange={(e) => setSearchData(e.target.value)} type="search" placeholder="Search" aria-label="Search" />
+            {/* <button className="btn btn-outline-success" type="submit">Search</button> */}
           </form>
         </div>
       </div>
@@ -31,4 +39,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Navbar;
